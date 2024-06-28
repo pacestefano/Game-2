@@ -14,10 +14,12 @@ body {
 
 #board {
     display: grid;
-    grid-template-columns: repeat(4, 100px);
-    grid-template-rows: repeat(4, 100px);
-    gap: 5px;
+    grid-template-columns: repeat(4, 1fr);
+    grid-template-rows: repeat(4, 1fr);
+    gap: 0.5vw;
     margin-right: 20px;
+    width: 40vw;
+    height: 40vw;
 }
 
 #sidebar {
@@ -27,12 +29,12 @@ body {
 }
 
 #move-counter {
-    font-size: 24px;
+    font-size: 3vw;
     margin-bottom: 20px;
 }
 
 #win-message {
-    font-size: 24px;
+    font-size: 3vw;
     margin-bottom: 20px;
 }
 
@@ -41,21 +43,19 @@ body {
 }
 
 .box {
-    width: 100px;
-    height: 100px;
     background-color: #f0f0f0;
     display: flex;
     justify-content: center;
     align-items: center;
-    font-size: 24px;
+    font-size: 2vw;
     border: 1px solid #ccc;
 }
 
 .ball {
-    width: 50px;
-    height: 50px;
     border-radius: 50%;
     cursor: grab;
+    width: 10vw;
+    height: 10vw;
 }
 
 .box.over {
@@ -69,17 +69,20 @@ body {
 /* Media query per dispositivi con larghezza massima di 768px (tipicamente tablet e telefoni) */
 @media (max-width: 768px) {
     #board {
-        grid-template-columns: repeat(4, 80px);
-        grid-template-rows: repeat(4, 80px);
-    }
-
-    .box {
-        width: 80px;
-        height: 80px;
+        width: 80vw;
+        height: 80vw;
     }
 
     .ball {
-        width: 40px;
-        height: 40px;
+        width: 20vw;
+        height: 20vw;
+    }
+
+    #move-counter, #win-message {
+        font-size: 6vw;
+    }
+
+    .box {
+        font-size: 4vw;
     }
 }
