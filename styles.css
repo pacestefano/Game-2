@@ -5,6 +5,7 @@ body {
     height: 100vh;
     margin: 0;
     font-family: Arial, sans-serif;
+    background-color: #f0f0f0;
 }
 
 #container {
@@ -16,10 +17,50 @@ body {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
     grid-template-rows: repeat(4, 1fr);
-    gap: 0.5vw;
+    gap: 0; /* Rimuoviamo lo spazio tra i box */
     margin-right: 20px;
-    width: 40vw;
-    height: 40vw;
+    width: 80vw;
+    max-width: 400px;
+    height: 80vw;
+    max-height: 400px;
+    background-color: #fff; /* Assicuriamoci che il background sia bianco */
+    border: 2px solid #ccc; /* Linee grigie intorno alla scacchiera */
+    border-radius: 8px; /* Bordo arrotondato */
+    position: relative; /* Per posizionare le linee divisorie */
+}
+
+#board::before, #board::after {
+    content: '';
+    position: absolute;
+    width: 2px;
+    height: 100%;
+    background-color: #ccc;
+    top: 0;
+}
+
+#board::before {
+    left: 25%;
+}
+
+#board::after {
+    left: 50%;
+}
+
+#board::before, #board::after {
+    content: '';
+    position: absolute;
+    height: 2px;
+    width: 100%;
+    background-color: #ccc;
+    left: 0;
+}
+
+#board::before {
+    top: 25%;
+}
+
+#board::after {
+    top: 50%;
 }
 
 #sidebar {
@@ -28,14 +69,35 @@ body {
     align-items: center;
 }
 
-#move-counter {
-    font-size: 3vw;
+#move-counter, #timer, #min-moves {
+    font-size: 18px;
+    margin-bottom: 10px;
+}
+
+#progress-bar-container {
+    width: 100%;
+    background-color: #ddd;
+    border-radius: 5px;
     margin-bottom: 20px;
 }
 
+#progress-bar {
+    width: 100%;
+    height: 20px;
+    background-color: #4caf50;
+    border-radius: 5px;
+}
+
 #win-message {
-    font-size: 3vw;
-    margin-bottom: 20px;
+    font-size: 18px;
+    margin-bottom: 10px;
+    color: green;
+}
+
+#timeout-message {
+    font-size: 18px;
+    margin-bottom: 10px;
+    color: red;
 }
 
 .hidden {
@@ -43,23 +105,22 @@ body {
 }
 
 .box {
-    background-color: #f0f0f0;
+    background-color: #ffffff;
     display: flex;
     justify-content: center;
     align-items: center;
-    font-size: 2vw;
-    border: 1px solid #ccc;
+    font-size: 18px;
 }
 
 .square {
-    border-radius: 10%;
+    border-radius: 8px;
     cursor: grab;
-    width: 90%;
-    height: 90%;
+    width: 70%;
+    height: 70%;
 }
 
 .box.over {
-    border: 2px dashed #000;
+    outline: 2px dashed #000;
 }
 
 .hide {
@@ -74,15 +135,15 @@ body {
     }
 
     .square {
-        width: 90%;
-        height: 90%;
+        width: 70%;
+        height: 70%;
     }
 
-    #move-counter, #win-message {
-        font-size: 6vw;
+    #move-counter, #timer, #min-moves, #win-message, #timeout-message {
+        font-size: 14px;
     }
 
     .box {
-        font-size: 4vw;
+        font-size: 14px;
     }
 }
