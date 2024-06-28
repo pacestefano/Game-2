@@ -51,11 +51,11 @@ body {
     border: 1px solid #ccc;
 }
 
-.ball {
-    border-radius: 50%;
+.square {
+    border-radius: 10%;
     cursor: grab;
-    width: 10vw;
-    height: 10vw;
+    width: 90%;
+    height: 90%;
 }
 
 .box.over {
@@ -73,9 +73,9 @@ body {
         height: 80vw;
     }
 
-    .ball {
-        width: 20vw;
-        height: 20vw;
+    .square {
+        width: 90%;
+        height: 90%;
     }
 
     #move-counter, #win-message {
