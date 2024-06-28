@@ -145,15 +145,4 @@ document.addEventListener('DOMContentLoaded', () => {
     function touchEnd(event) {
         const touch = event.changedTouches[0];
         const element = document.elementFromPoint(touch.clientX, touch.clientY);
-        if (element && element.classList.contains('box') && isAdjacent(draggedBall.parentNode, element) && !element.hasChildNodes()) {
-            element.appendChild(draggedBall);
-            updateMoveCounter();
-            checkWin();
-        }
-        draggedBall.classList.remove('hide');
-        document.querySelectorAll('.box').forEach(box => box.classList.remove('over'));
-    }
-
-    document.getElementById('new-game').addEventListener('click', initializeGame);
-    initializeGame();
-});
+        if (element && element.classList.contains('box') && isAdjacent(draggedBall.parentNode, elem
