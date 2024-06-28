@@ -1,9 +1,13 @@
 document.addEventListener('DOMContentLoaded', () => {
     const board = document.getElementById('board');
-    const colors = ['blue', 'yellow', 'green', 'red'];
+    const colors = ['#ff0000', '#00ff00', '#0000ff', '#ffff00']; // Adjusted colors for better visibility
     let positions = [];
     let moves = 0;
     let draggedSquare = null;
+    let timerInterval = null;
+    let startTime = null;
+    const maxTime = 120; // 2 minutes in seconds
+    const minMoves = 15; // This is a placeholder. We'll assume the minimum number of moves is 15;
 
     function initializeGame() {
         board.innerHTML = '';
@@ -11,6 +15,13 @@ document.addEventListener('DOMContentLoaded', () => {
         moves = 0;
         document.getElementById('moves').innerText = moves;
         document.getElementById('win-message').classList.add('hidden');
+        document.getElementById('timeout-message').classList.add('hidden');
+        document.getElementById('timer').innerText = 'Timer: 00:00';
+        document.getElementById('min-moves').innerText = `Numero minimo di mosse necessarie: ${minMoves}`;
+        document.getElementById('progress-bar').style.width = '100%';
+
+        clearInterval(timerInterval);
+        startTime = null;
 
         for (let i = 0; i < 16; i++) {
             const box = document.createElement('div');
@@ -43,6 +54,13 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
+    function shuffle(array) {
+        for (let i = array.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [array[i], array[j]] = [array[j], array[i]];
+        }
+    }
+
     function allowDrop(event) {
         event.preventDefault();
     }
@@ -52,6 +70,10 @@ document.addEventListener('DOMContentLoaded', () => {
         setTimeout(() => {
             event.target.classList.add('hide');
         }, 0);
+
+        if (!startTime) {
+            startTimer();
+        }
     }
 
     function dragEnd(event) {
@@ -114,24 +136,46 @@ document.addEventListener('DOMContentLoaded', () => {
             [3, 6, 9, 12]
         ];
 
+        const checkPattern = (pattern, color) => pattern.every(index => {
+            const square = boxes[index].firstChild;
+            return square && square.style.backgroundColor === color;
+        });
+
         let win = colors.some(color => {
             return winPatterns.some(pattern => {
-                return pattern.every(index => {
-                    const square = boxes[index].firstChild;
-                    return square && square.style.backgroundColor === color;
-                });
+                return checkPattern(pattern, color);
             });
         });
 
         if (win) {
             document.getElementById('win-message').classList.remove('hidden');
+            clearInterval(timerInterval);
         }
+    }
+
+    function checkTimeout() {
+        const now = new Date();
+        const elapsedTime = Math.floor((now - startTime) / 1000);
+        const remainingTime = maxTime - elapsedTime;
+        const progressBar = document.getElementById('progress-bar');
+
+        if (remainingTime <= 0) {
+            document.getElementById('timeout-message').classList.remove('hidden');
+            clearInterval(timerInterval);
+        }
+
+        const percentage = Math.max((remainingTime / maxTime) * 100, 0);
+        progressBar.style.width = `${percentage}%`;
     }
 
     // Funzioni per il touch
     function touchStart(event) {
         draggedSquare = event.target;
         event.target.classList.add('hide');
+
+        if (!startTime) {
+            startTimer();
+        }
     }
 
     function touchMove(event) {
@@ -152,6 +196,22 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         draggedSquare.classList.remove('hide');
         document.querySelectorAll('.box').forEach(box => box.classList.remove('over'));
+    }
+
+    function startTimer() {
+        startTime = new Date();
+        timerInterval = setInterval(() => {
+            updateTimer();
+            checkTimeout();
+        }, 1000);
+    }
+
+    function updateTimer() {
+        const now = new Date();
+        const elapsedTime = Math.floor((now - startTime) / 1000);
+        const minutes = Math.floor(elapsedTime / 60);
+        const seconds = elapsedTime % 60;
+        document.getElementById('timer').innerText = `Timer: ${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
     }
 
     document.getElementById('new-game').addEventListener('click', initializeGame);
