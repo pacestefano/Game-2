@@ -62,7 +62,7 @@ document.addEventListener('DOMContentLoaded', () => {
         event.preventDefault();
         const data = event.dataTransfer.getData('text');
         const ball = document.getElementById(data);
-        if (isAdjacent(ball.parentNode, event.target)) {
+        if (isAdjacent(ball.parentNode, event.target) && !event.target.hasChildNodes()) {
             event.target.appendChild(ball);
             updateMoveCounter();
             checkWin();
@@ -145,7 +145,7 @@ document.addEventListener('DOMContentLoaded', () => {
     function touchEnd(event) {
         const touch = event.changedTouches[0];
         const element = document.elementFromPoint(touch.clientX, touch.clientY);
-        if (element && element.classList.contains('box') && isAdjacent(draggedBall.parentNode, element)) {
+        if (element && element.classList.contains('box') && isAdjacent(draggedBall.parentNode, element) && !element.hasChildNodes()) {
             element.appendChild(draggedBall);
             updateMoveCounter();
             checkWin();
