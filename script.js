@@ -3,7 +3,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const colors = ['blue', 'yellow', 'green', 'red'];
     let positions = [];
     let moves = 0;
-    let draggedBall = null;
+    let draggedSquare = null;
 
     function initializeGame() {
         board.innerHTML = '';
@@ -29,17 +29,17 @@ document.addEventListener('DOMContentLoaded', () => {
 
         shuffle(positions);
         for (let i = 0; i < 15; i++) {
-            const ball = document.createElement('div');
-            ball.classList.add('ball');
-            ball.style.backgroundColor = colors[i % 4];
-            ball.draggable = true;
-            ball.id = 'ball-' + i;
-            ball.addEventListener('dragstart', dragStart);
-            ball.addEventListener('dragend', dragEnd);
-            ball.addEventListener('touchstart', touchStart);
-            ball.addEventListener('touchmove', touchMove);
-            ball.addEventListener('touchend', touchEnd);
-            document.getElementById('box-' + positions[i]).appendChild(ball);
+            const square = document.createElement('div');
+            square.classList.add('square');
+            square.style.backgroundColor = colors[i % 4];
+            square.draggable = true;
+            square.id = 'square-' + i;
+            square.addEventListener('dragstart', dragStart);
+            square.addEventListener('dragend', dragEnd);
+            square.addEventListener('touchstart', touchStart);
+            square.addEventListener('touchmove', touchMove);
+            square.addEventListener('touchend', touchEnd);
+            document.getElementById('box-' + positions[i]).appendChild(square);
         }
     }
 
@@ -61,9 +61,9 @@ document.addEventListener('DOMContentLoaded', () => {
     function drop(event) {
         event.preventDefault();
         const data = event.dataTransfer.getData('text');
-        const ball = document.getElementById(data);
-        if (isAdjacent(ball.parentNode, event.target) && !event.target.hasChildNodes()) {
-            event.target.appendChild(ball);
+        const square = document.getElementById(data);
+        if (isAdjacent(square.parentNode, event.target) && !event.target.hasChildNodes()) {
+            event.target.appendChild(square);
             updateMoveCounter();
             checkWin();
         }
@@ -71,7 +71,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function dragEnter(event) {
-        if (isAdjacent(document.querySelector('.ball.hide').parentNode, event.target)) {
+        if (isAdjacent(document.querySelector('.square.hide').parentNode, event.target)) {
             event.target.classList.add('over');
         }
     }
@@ -117,8 +117,8 @@ document.addEventListener('DOMContentLoaded', () => {
         let win = colors.some(color => {
             return winPatterns.some(pattern => {
                 return pattern.every(index => {
-                    const ball = boxes[index].firstChild;
-                    return ball && ball.style.backgroundColor === color;
+                    const square = boxes[index].firstChild;
+                    return square && square.style.backgroundColor === color;
                 });
             });
         });
@@ -130,14 +130,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Funzioni per il touch
     function touchStart(event) {
-        draggedBall = event.target;
+        draggedSquare = event.target;
         event.target.classList.add('hide');
     }
 
     function touchMove(event) {
         const touch = event.touches[0];
         const element = document.elementFromPoint(touch.clientX, touch.clientY);
-        if (element && element.classList.contains('box') && isAdjacent(draggedBall.parentNode, element)) {
+        if (element && element.classList.contains('box') && isAdjacent(draggedSquare.parentNode, element)) {
             element.classList.add('over');
         }
     }
@@ -145,12 +145,12 @@ document.addEventListener('DOMContentLoaded', () => {
     function touchEnd(event) {
         const touch = event.changedTouches[0];
         const element = document.elementFromPoint(touch.clientX, touch.clientY);
-        if (element && element.classList.contains('box') && isAdjacent(draggedBall.parentNode, element) && !element.hasChildNodes()) {
-            element.appendChild(draggedBall);
+        if (element && element.classList.contains('box') && isAdjacent(draggedSquare.parentNode, element) && !element.hasChildNodes()) {
+            element.appendChild(draggedSquare);
             updateMoveCounter();
             checkWin();
         }
-        draggedBall.classList.remove('hide');
+        draggedSquare.classList.remove('hide');
         document.querySelectorAll('.box').forEach(box => box.classList.remove('over'));
     }
 
