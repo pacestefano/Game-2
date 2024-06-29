@@ -8,8 +8,7 @@
 </head>
 <body>
     <div id="container">
-        <div id="board"></div>
-        <div id="sidebar">
+        <div id="header">
             <div id="move-counter">
                 <h2>Mosse: <span id="moves">0</span></h2>
             </div>
@@ -30,7 +29,18 @@
             </div>
             <button id="new-game">Inizia nuova partita</button>
         </div>
+        <div id="board-container">
+            <div id="board">
+                <div class="line vline-1"></div>
+                <div class="line vline-2"></div>
+                <div class="line vline-3"></div>
+                <div class="line hline-1"></div>
+                <div class="line hline-2"></div>
+                <div class="line hline-3"></div>
+            </div>
+        </div>
     </div>
+    <audio id="move-sound" src="move-sound.mp3"></audio>
     <script src="script.js"></script>
 </body>
 </html>
