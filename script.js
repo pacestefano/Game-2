@@ -1,6 +1,6 @@
 document.addEventListener('DOMContentLoaded', () => {
     const board = document.getElementById('board');
-    const colors = ['#ff0000', '#00ff00', '#0000ff', '#ffff00']; // Adjusted colors for better visibility
+    const colors = ['#ff0000', '#00ff00', '#0000ff', '#ffff00'];
     let positions = [];
     let moves = 0;
     let draggedSquare = null;
@@ -8,6 +8,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let startTime = null;
     const maxTime = 120; // 2 minutes in seconds
     const minMoves = 15; // This is a placeholder. We'll assume the minimum number of moves is 15;
+    const moveSound = document.getElementById('move-sound'); // Reference to the audio element
 
     function initializeGame() {
         board.innerHTML = '';
@@ -31,9 +32,9 @@ document.addEventListener('DOMContentLoaded', () => {
             box.addEventListener('drop', drop);
             box.addEventListener('dragenter', dragEnter);
             box.addEventListener('dragleave', dragLeave);
-            box.addEventListener('touchstart', touchStart);
-            box.addEventListener('touchmove', touchMove);
-            box.addEventListener('touchend', touchEnd);
+            box.addEventListener('touchstart', touchStart, { passive: false });
+            box.addEventListener('touchmove', touchMove, { passive: false });
+            box.addEventListener('touchend', touchEnd, { passive: false });
             board.appendChild(box);
             positions.push(i);
         }
@@ -47,9 +48,9 @@ document.addEventListener('DOMContentLoaded', () => {
             square.id = 'square-' + i;
             square.addEventListener('dragstart', dragStart);
             square.addEventListener('dragend', dragEnd);
-            square.addEventListener('touchstart', touchStart);
-            square.addEventListener('touchmove', touchMove);
-            square.addEventListener('touchend', touchEnd);
+            square.addEventListener('touchstart', touchStart, { passive: false });
+            square.addEventListener('touchmove', touchMove, { passive: false });
+            square.addEventListener('touchend', touchEnd, { passive: false });
             document.getElementById('box-' + positions[i]).appendChild(square);
         }
     }
@@ -88,6 +89,7 @@ document.addEventListener('DOMContentLoaded', () => {
             event.target.appendChild(square);
             updateMoveCounter();
             checkWin();
+            moveSound.play(); // Play the move sound
         }
         event.target.classList.remove('over');
     }
@@ -168,10 +170,11 @@ document.addEventListener('DOMContentLoaded', () => {
         progressBar.style.width = `${percentage}%`;
     }
 
-    // Funzioni per il touch
     function touchStart(event) {
+        event.preventDefault();
         draggedSquare = event.target;
-        event.target.classList.add('hide');
+        draggedSquare.classList.add('dragging'); // Feedback visivo
+        disableScroll(); // Disabilita lo scrolling durante il tocco
 
         if (!startTime) {
             startTimer();
@@ -179,6 +182,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function touchMove(event) {
+        event.preventDefault();
         const touch = event.touches[0];
         const element = document.elementFromPoint(touch.clientX, touch.clientY);
         if (element && element.classList.contains('box') && isAdjacent(draggedSquare.parentNode, element)) {
@@ -187,14 +191,17 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function touchEnd(event) {
+        event.preventDefault();
         const touch = event.changedTouches[0];
         const element = document.elementFromPoint(touch.clientX, touch.clientY);
         if (element && element.classList.contains('box') && isAdjacent(draggedSquare.parentNode, element) && !element.hasChildNodes()) {
             element.appendChild(draggedSquare);
             updateMoveCounter();
             checkWin();
+            moveSound.play(); // Play the move sound
         }
-        draggedSquare.classList.remove('hide');
+        draggedSquare.classList.remove('dragging'); // Rimuovi feedback visivo
+        enableScroll(); // Abilita nuovamente lo scrolling dopo il tocco
         document.querySelectorAll('.box').forEach(box => box.classList.remove('over'));
     }
 
@@ -212,6 +219,14 @@ document.addEventListener('DOMContentLoaded', () => {
         const minutes = Math.floor(elapsedTime / 60);
         const seconds = elapsedTime % 60;
         document.getElementById('timer').innerText = `Timer: ${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+    }
+
+    function disableScroll() {
+        document.body.style.overflow = 'hidden';
+    }
+
+    function enableScroll() {
+        document.body.style.overflow = '';
     }
 
     document.getElementById('new-game').addEventListener('click', initializeGame);
