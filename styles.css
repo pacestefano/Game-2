@@ -75,44 +75,47 @@ body {
     max-width: 400px;
     height: 80vw;
     max-height: 400px;
-    background-color: #fff;
-    border: 2px solid #ccc;
-    border-radius: 8px;
+    background-color: #ffffff;
     position: relative;
 }
 
-#board::before, #board::after {
-    content: '';
+#board .line {
     position: absolute;
-    width: 2px;
-    height: 100%;
-    background-color: #ccc;
-    top: 0;
+    background-color: #d3d3d3; /* Colore grigio chiaro per le linee divisorie */
 }
 
-#board::before {
+#board .vline-1, #board .vline-2, #board .vline-3 {
+    width: 2px;
+    height: 100%;
+}
+
+#board .vline-1 {
     left: 25%;
 }
 
-#board::after {
+#board .vline-2 {
     left: 50%;
 }
 
-#board::before, #board::after {
-    content: '';
-    position: absolute;
-    height: 2px;
-    width: 100%;
-    background-color: #ccc;
-    left: 0;
+#board .vline-3 {
+    left: 75%;
 }
 
-#board::before {
+#board .hline-1, #board .hline-2, #board .hline-3 {
+    height: 2px;
+    width: 100%;
+}
+
+#board .hline-1 {
     top: 25%;
 }
 
-#board::after {
+#board .hline-2 {
     top: 50%;
+}
+
+#board .hline-3 {
+    top: 75%;
 }
 
 .box {
@@ -121,6 +124,7 @@ body {
     justify-content: center;
     align-items: center;
     font-size: 18px;
+    border: 0; /* Rimuoviamo i bordi delle caselle */
 }
 
 .square {
@@ -135,7 +139,7 @@ body {
 }
 
 .box.over {
-    outline: 2px dashed #000;
+    outline: 2px dashed #000000;
 }
 
 .hide {
