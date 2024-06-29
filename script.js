@@ -222,11 +222,15 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function disableScroll() {
-        document.body.style.overflow = 'hidden';
+        window.addEventListener('touchmove', preventDefault, { passive: false });
     }
 
     function enableScroll() {
-        document.body.style.overflow = '';
+        window.removeEventListener('touchmove', preventDefault, { passive: false });
+    }
+
+    function preventDefault(event) {
+        event.preventDefault();
     }
 
     document.getElementById('new-game').addEventListener('click', initializeGame);
